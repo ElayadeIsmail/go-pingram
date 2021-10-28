@@ -26,3 +26,16 @@ func CurrentUser(c *fiber.Ctx) error {
 	c.Locals("userId", int(u.ID))
 	return c.Next()
 }
+
+func RequireLogin(c *fiber.Ctx) error {
+	userId := c.Locals("userId")
+	if userId == 0 {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Unauthorized",
+			"data":    nil,
+		})
+	} else {
+		return c.Next()
+	}
+}

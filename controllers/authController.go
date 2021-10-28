@@ -208,7 +208,3 @@ func CurrentUser(c *fiber.Ctx) error {
 		"data":    u,
 	})
 }
-
-func RequireLogin(c *fiber.Ctx) error {
-	return nil
-}
