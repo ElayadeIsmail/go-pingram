@@ -10,11 +10,14 @@ func SetupRoutes(app *fiber.App) {
 	// Group API
 	api := app.Group("/api")
 	api.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Server Runing on Port 3000")
+		return c.Status(200).SendString("Hello World")
 	})
 
 	// Auth group
-	auth := app.Group("/auth")
-
+	auth := api.Group("/auth")
+	// Auth Routes
 	auth.Post("/register", controllers.Register)
+	auth.Post("/login", controllers.Login)
+	auth.Post("/logout", controllers.Logout)
+	auth.Get("/currentuser", controllers.CurrentUser)
 }
