@@ -2,10 +2,14 @@ package routes
 
 import (
 	"github.com/ElayadeIsmail/go-pingram/controllers"
+	"github.com/ElayadeIsmail/go-pingram/middlewares"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(app *fiber.App) {
+
+	// add currentuserMiddleware
+	app.Use(middlewares.CurrentUser)
 
 	// Group API
 	api := app.Group("/api")

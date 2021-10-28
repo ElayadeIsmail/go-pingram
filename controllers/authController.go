@@ -192,23 +192,23 @@ func Logout(c *fiber.Ctx) error {
 }
 
 func CurrentUser(c *fiber.Ctx) error {
-	cookie := c.Cookies(config.Getenv("COOKIE_NAME"))
-	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(t *jwt.Token) (interface{}, error) {
-		return []byte(config.Getenv("JWT_SECRET")), nil
-	})
-	if err != nil {
+	userId := c.Locals("userId")
+	if userId == 0 {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Unauthorized",
 			"data":    nil,
 		})
 	}
-	claims := token.Claims.(*jwt.StandardClaims)
 	var u models.User
-	database.DB.Where("id = ?", claims.Issuer).First(&u)
+	database.DB.Where("id = ?", userId).First(&u)
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status":  "success",
 		"message": "user found",
 		"data":    u,
 	})
+}
+
+func RequireLogin(c *fiber.Ctx) error {
+	return nil
 }

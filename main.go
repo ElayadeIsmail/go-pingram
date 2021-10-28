@@ -6,7 +6,9 @@ import (
 	"github.com/ElayadeIsmail/go-pingram/database"
 	"github.com/ElayadeIsmail/go-pingram/routes"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func main() {
@@ -15,6 +17,14 @@ func main() {
 
 	// Apply Cors Middleware
 	app.Use(cors.New())
+
+	// Apply Compration middleware
+	app.Use(compress.New(compress.Config{
+		Level: compress.LevelBestCompression,
+	}))
+
+	// Apply Recover middleware
+	app.Use(recover.New())
 
 	// Connect To Database
 	database.Connect()
