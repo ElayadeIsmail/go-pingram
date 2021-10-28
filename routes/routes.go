@@ -27,5 +27,8 @@ func SetupRoutes(app *fiber.App) {
 
 	// posts Group
 	post := api.Group("/post")
-	post.Get("/", middlewares.RequireLogin, controllers.GetPosts)
+	post.Get("/", controllers.GetPosts)
+	post.Get("/:id", controllers.GetPostById)
+	post.Post("/", middlewares.RequireLogin, controllers.AddPost)
+	post.Delete("/:id", middlewares.RequireLogin, controllers.DeletePost)
 }
