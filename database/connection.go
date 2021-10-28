@@ -24,7 +24,7 @@ func Connect() {
 		panic("Could Not Connect To Database")
 	}
 	fmt.Println("Connected Successfully to database")
-	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.User{}, &models.Post{})
 	fmt.Println("Database Migrated")
 }
 

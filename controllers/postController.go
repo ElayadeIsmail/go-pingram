@@ -9,3 +9,12 @@ func GetPosts(c *fiber.Ctx) error {
 		"data":    nil,
 	})
 }
+
+func AddPost(c *fiber.Ctx) error {
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status":  "success",
+		"message": "ok",
+		"data":    nil,
+	})
+}
