@@ -22,6 +22,8 @@ func main() {
 		Level: compress.LevelBestCompression,
 	}))
 
+	app.Static("/", "./public")
+
 	// Apply Recover middleware
 	// app.Use(recover.New())
 

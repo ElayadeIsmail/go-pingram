@@ -14,5 +14,7 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+public/uploads
+
 # Dependency directories (remove the comment below to include it)
 # vendor/

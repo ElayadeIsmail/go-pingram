@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/ElayadeIsmail/go-pingram/database"
 	"github.com/ElayadeIsmail/go-pingram/models"
@@ -29,18 +31,23 @@ func GetPosts(c *fiber.Ctx) error {
 }
 
 func AddPost(c *fiber.Ctx) error {
-	var data map[string]string
-	if err := c.BodyParser(&data); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-			"data":    nil,
-		})
-	}
-	if found, ok := data["text"]; !ok || len(found) < 2 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Bad Request", "data": fiber.Map{"text": "Text must be more that 2 char"}})
+	var imageUrl string
+	if file, err := c.FormFile("image"); err == nil {
+		imageUrl = fmt.Sprintf("/uploads/posts/%v", file.Filename)
+		imagesPath := "./public/uploads/posts"
+		if err := os.MkdirAll(imagesPath, os.ModePerm); err != nil {
+			log.Println(err)
+		}
+		if err := c.SaveFile(file, fmt.Sprintf("./public%v", imageUrl)); err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": err.Error(), "data": nil})
+		}
 	}
 
+	text := c.FormValue("text")
+	if text == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Bad Request", "data": fiber.Map{"text": "Text must be more that 2 char"}})
+	}
 	userId, ok := c.Locals("userId").(int)
 	if !ok {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -57,10 +64,9 @@ func AddPost(c *fiber.Ctx) error {
 			"data":    nil,
 		})
 	}
-	fmt.Println()
 	p := models.Post{
-		Text:     data["text"],
-		ImageUrl: data["imageUrl"],
+		Text:     text,
+		ImageUrl: imageUrl,
 		User:     u,
 	}
 	if err := database.DB.Create(&p).Error; err != nil {

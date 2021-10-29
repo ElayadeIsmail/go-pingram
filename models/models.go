@@ -19,7 +19,7 @@ type User struct {
 
 type Post struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
-	Text      string         `json:"text" validate:"required" `
+	Text      string         `json:"text" validate:"required" form:"text"`
 	ImageUrl  string         `json:"imageUrl"`
 	UserID    uint           `json:"userId"`
 	User      User           `json:"user"`
